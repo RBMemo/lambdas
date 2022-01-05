@@ -1,0 +1,11 @@
+{
+  "DelaySeconds": 1,
+  "MessageAttributes": {
+    "Sender": {
+      "DataType": "String",
+      "StringValue": "sqs-payload-logger"
+    }
+  },
+  "MessageBody": "{\"address\":\"0x136Acd46C134E8269052c62A67042D6bDeDde3C9\"}",
+  "QueueUrl": "SQS_QUEUE_URL"
+}

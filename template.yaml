@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  rb-sam
+Transform:
+- AWS::Serverless-2016-10-31
+
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
+Resources:  
+  # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  RebaseCaller:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: A Lambda function that calls rebase on the account passed in from a message.
+      Runtime: nodejs14.x
+      Architectures:
+        - arm64
+      Handler: src/handlers/rebase-caller.rebaseCallerHandler
+      Events:
+        SQSQueueEvent:
+          Type: SQS
+          Properties:
+            Queue: arn:aws:sqs:us-west-2:016619982582:rebase_beacon_queue
+      MemorySize: 256
