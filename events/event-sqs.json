@@ -6,6 +6,6 @@
       "StringValue": "sqs-payload-logger"
     }
   },
-  "MessageBody": "{\"address\":\"0x136Acd46C134E8269052c62A67042D6bDeDde3C9\"}",
+  "MessageBody": "{\"tokenAddress\":\"0x136Acd46C134E8269052c62A67042D6bDeDde3C9\",\"controllerAddress\":\"0xd81FFcF9EfB897b589f4399a8A99f6d77a70ecB2\"}",
   "QueueUrl": "SQS_QUEUE_URL"
 }
