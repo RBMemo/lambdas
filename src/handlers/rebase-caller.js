@@ -1,6 +1,7 @@
 const { connect } = require('../../lib/web3-connector');
 const { seedHex, generateNewSeedHash } = require('../../lib/utils');
 const RBPoolControllerABI = require('../../lib/contracts/RBPoolController.json').abi;
+const { fetchSeedKey, updateSeedKey } = require('../../lib/db');
 
 exports.rebaseCallerHandler = async (event, context) => {
   const { web3, deployer_address, deployer_key } = await connect(event.env);
@@ -12,10 +13,7 @@ exports.rebaseCallerHandler = async (event, context) => {
     return;
   }
   
-  // fetch seedKey
-  const seedKey = seedHex(web3, 'something');
-  
-  // generate new seedKey and hash
+  const seedKey = seedHex(web3, await fetchSeedKey(contractAddress));  
   const { newSeedKey, newSeedHash } = generateNewSeedHash(web3, deployer_address);
 
   let tx = {
@@ -40,5 +38,8 @@ exports.rebaseCallerHandler = async (event, context) => {
     console.info('tx hash:', prom.transactionHash);
   } catch (e) {
     console.error(e);
+    return;
   }
+
+  await updateSeedKey(contractAddress, newSeedKey);
 }

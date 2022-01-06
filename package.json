@@ -4,6 +4,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"dependencies": {
+		"@aws-sdk/client-dynamodb": "^3.45.0",
 		"@aws-sdk/client-secrets-manager": "^3.45.0",
 		"uuid": "^8.3.2",
 		"web3": "^1.6.1"
