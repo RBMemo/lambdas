@@ -4,12 +4,13 @@ const RBPoolControllerABI = require('../../lib/contracts/RBPoolController.json')
 const { fetchSeedKey, updateSeedKey } = require('../../lib/db');
 
 exports.rebaseCallerHandler = async (event, context) => {
+  console.info('[RebaseCaller][Start]')
   const { web3, deployer_address, deployer_key } = await connect(event.env);
   const { controllerAddress: contractAddress } = JSON.parse(event.Records[0].body)
 	const contract = new web3.eth.Contract(RBPoolControllerABI, contractAddress);
 
   if(!contractAddress || !deployer_address || !deployer_key || !web3 || !contract) {
-    console.error('Missing info to continue');
+    console.error('[RebaseCaller] Missing info to continue');
     return;
   }
   
@@ -26,7 +27,7 @@ exports.rebaseCallerHandler = async (event, context) => {
   try {
     tx['gas'] = `0x${(await web3.eth.estimateGas(tx)).toString(16)}`
   } catch (e) {
-    console.info('Error estimating gas');
+    console.info('[RebaseCaller] Error estimating gas');
     console.error(e);
     return;
   }
@@ -35,7 +36,7 @@ exports.rebaseCallerHandler = async (event, context) => {
 
   try {
     const prom = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-    console.info('tx hash:', prom.transactionHash);
+    console.info('[RebaseCaller][Success] tx hash:', prom.transactionHash);
   } catch (e) {
     console.error(e);
     return;
