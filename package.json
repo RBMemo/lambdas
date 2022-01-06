@@ -10,7 +10,7 @@
 		"web3": "^1.6.1"
 	},
 	"scripts": {
-		"test": "jest",
-		"invoke": "sam local invoke RebaseCaller --event events/event-sqs.json"
+		"invoke": "sam local invoke RebaseCaller --event events/event-sqs.json",
+		"deploy": "sam deploy"
 	}
 }

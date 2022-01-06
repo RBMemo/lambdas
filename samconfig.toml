@@ -1,0 +1,11 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "rb-lambdas"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-2ct6w72c3lbx"
+s3_prefix = "rb-lambdas"
+region = "us-west-2"
+confirm_changeset = false
+capabilities = "CAPABILITY_IAM"
+image_repositories = []
