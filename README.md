@@ -53,8 +53,6 @@ The first command will build the source of your application. The second command 
 
 ## Use the AWS SAM CLI to build and test locally
 
-Build your application by using the `sam build` command.
-
 ```bash
 my-application$ sam build
 ```
