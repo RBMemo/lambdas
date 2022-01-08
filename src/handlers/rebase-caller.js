@@ -9,9 +9,13 @@ exports.rebaseCallerHandler = async (event, context) => {
   const { controllerAddress: contractAddress } = JSON.parse(event.Records[0].body)
 	const contract = new web3.eth.Contract(RBPoolControllerABI, contractAddress);
 
-  if(!contractAddress || !deployer_address || !deployer_key || !web3 || !contract) {
-    console.error('[RebaseCaller] Missing info to continue');
+  if(!contractAddress) {
+    console.error('[RebaseCaller] Message missing info');
     return;
+  }
+
+  if(!deployer_address || !deployer_key || !web3 || !contract) {
+    throw new Error('[RebaseCaller] Error initializing info');
   }
   
   const seedKey = seedHex(web3, await fetchSeedKey(contractAddress));  
@@ -28,8 +32,7 @@ exports.rebaseCallerHandler = async (event, context) => {
     tx['gas'] = `0x${(await web3.eth.estimateGas(tx)).toString(16)}`
   } catch (e) {
     console.info('[RebaseCaller] Error estimating gas');
-    console.error(e);
-    return;
+    throw e;
   }
 
   const signedTx = await web3.eth.accounts.signTransaction(tx, deployer_key);
@@ -38,8 +41,8 @@ exports.rebaseCallerHandler = async (event, context) => {
     const prom = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
     console.info('[RebaseCaller][Success] tx hash:', prom.transactionHash);
   } catch (e) {
-    console.error(e);
-    return;
+    console.info('[RebaseCaller] Error sending tx');
+    throw e;
   }
 
   await updateSeedKey(contractAddress, newSeedKey);
