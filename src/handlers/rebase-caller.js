@@ -1,6 +1,6 @@
 const { connect } = require('../../lib/web3-connector');
 const { seedHex, generateNewSeedHash } = require('../../lib/utils');
-const RBPoolControllerABI = require('../../lib/contracts/RBPoolController.json').abi;
+const RBPoolControllerABI = require('@splitbase-dev/contracts/deployments/mainnet/RBPoolController.json').abi;
 const { fetchSeedKey, updateSeedKey } = require('../../lib/db');
 
 exports.rebaseCallerHandler = async (event, context) => {
