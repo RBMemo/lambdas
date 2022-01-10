@@ -6,7 +6,9 @@ const { fetchSeedKey, updateSeedKey } = require('../../lib/db');
 exports.rebaseCallerHandler = async (event, context) => {
   console.info('[RebaseCaller][Start]')
   const { web3, deployer_address, deployer_key } = await connect(event.env);
-  const { controllerAddress: contractAddress } = JSON.parse(event.Records[0].body)
+  const messageBody = event.Records[0].body;
+  console.info(`[RebaseCaller] processing messageBody=${messageBody}`);
+  const { controllerAddress: contractAddress } = JSON.parse(messageBody);
 	const contract = new web3.eth.Contract(RBPoolControllerABI, contractAddress);
 
   if(!contractAddress) {
