@@ -1,0 +1,9 @@
+{
+	"dependencies": {
+		"@aws-sdk/client-dynamodb": "^3.45.0",
+		"@aws-sdk/client-secrets-manager": "^3.45.0",
+		"@splitbase-dev/contracts": "github:RBMemo/contracts",
+		"uuid": "^8.3.2",
+		"web3": "^1.6.1"
+	}
+}

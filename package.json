@@ -1,17 +1,12 @@
 {
-	"name": "replaced-by-user-input",
-	"description": "replaced-by-user-input",
+	"name": "splitbase-lambdas",
+	"description": "splitbase-lambdas",
 	"version": "0.0.1",
 	"private": true,
-	"dependencies": {
-		"@aws-sdk/client-dynamodb": "^3.45.0",
-		"@aws-sdk/client-secrets-manager": "^3.45.0",
-		"@splitbase-dev/contracts": "github:RBMemo/contracts",
-		"uuid": "^8.3.2",
-		"web3": "^1.6.1"
-	},
 	"scripts": {
-		"invoke": "sam local invoke RebaseCaller --event events/event-sqs.json",
-		"deploy": "sam deploy"
+		"deploy": "sam deploy",
+		"invoke-RebaseCaller": "sam local invoke RebaseCaller --event events/sqs.json",
+		"invoke-TransferLocker-withdraw": "sam local invoke TransferLocker --event events/scheduled-withdraw.json",
+		"invoke-TransferLocker-deposit": "sam local invoke TransferLocker --event events/scheduled-deposit.json"
 	}
 }

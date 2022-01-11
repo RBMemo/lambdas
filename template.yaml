@@ -7,6 +7,16 @@ Transform:
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
 Resources:  
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  DepsLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: lambda-dependencies
+      Description: Dependencies for splitbase lambdas
+      ContentUri: layers/dependencies/
+      CompatibleRuntimes:
+        - nodejs14.x
+      CompatibleArchitectures:
+        - arm64
   RebaseCaller:
     Type: AWS::Serverless::Function
     Properties:
@@ -15,6 +25,8 @@ Resources:
       Architectures:
         - arm64
       Handler: src/handlers/rebase-caller.rebaseCallerHandler
+      Layers:
+        - !Ref DepsLayer
       Events:
         SQSQueueEvent:
           Type: SQS
@@ -22,3 +34,37 @@ Resources:
             Queue: arn:aws:sqs:us-west-2:016619982582:rebase_beacon_queue
       Timeout: 900
       MemorySize: 256
+  TransferLocker:
+    Type: AWS::Serverless::Function
+    Properties:
+      Description: A Lambda function that enables the depost lock on controller contract.
+      Runtime: nodejs14.x
+      Architectures:
+        - arm64
+      Handler: src/handlers/transfer-locker.transferLockerHandler
+      Layers:
+        - !Ref DepsLayer
+      Timeout: 900
+      MemorySize: 256
+  MEMOWithdrawLockEvent:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Invokes the TransferLocker to lock withdraws
+      ScheduleExpression: cron(0 5,13,21 * * ? *)
+      Name: MEMOWithdrawLockEvent
+      State: ENABLED
+      Targets:
+        - Id: 1
+          Arn: !GetAtt TransferLocker.Arn
+          Input: "{\"transferMethod\":\"withdraw\",\"controllerAddress\":\"0x8e655B09328eef11d28695B45135bdeb488Fac2C\"}"
+  MEMODepositLockEvent:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Invokes the TransferLocker to lock deposits
+      ScheduleExpression: cron(50 5,13,21 * * ? *)
+      Name: MEMODepositLockEvent
+      State: ENABLED
+      Targets:
+        - Id: 1
+          Arn: !GetAtt TransferLocker.Arn
+          Input: "{\"transferMethod\":\"deposit\",\"controllerAddress\":\"0x8e655B09328eef11d28695B45135bdeb488Fac2C\"}"
